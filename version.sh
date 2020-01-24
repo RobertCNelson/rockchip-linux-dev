@@ -33,11 +33,11 @@ toolchain="gcc_arm_aarch64_gnu_8"
 #toolchain="gcc_arm_aarch64_gnu_9"
 
 #Kernel
-KERNEL_REL=5.4
-KERNEL_TAG=${KERNEL_REL}.13
+KERNEL_REL=5.5
+KERNEL_TAG=${KERNEL_REL}-rc7
 kernel_rt=".10-rt5"
 #Kernel Build
-BUILD=${build_prefix}1
+BUILD=${build_prefix}0
 
 #v5.X-rcX + upto SHA
 #prev_KERNEL_SHA=""

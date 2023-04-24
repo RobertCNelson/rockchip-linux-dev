@@ -74,16 +74,6 @@ redhat_reqs () {
 		check_rpm
 		pkg="libmpc-devel.x86_64"
 		check_rpm
-		if [ "x${ignore_32bit}" = "xfalse" ] ; then
-			pkg="ncurses-devel.i686"
-			check_rpm
-			pkg="libmpc-devel.i686"
-			check_rpm
-			pkg="libstdc++.i686"
-			check_rpm
-			pkg="zlib.i686"
-			check_rpm
-		fi
 	fi
 
 	if [ "${rpm_pkgs}" ] ; then
@@ -167,7 +157,6 @@ debian_regs () {
 	pkg="u-boot-tools"
 	check_dpkg
 
-	unset warn_dpkg_ia32
 	unset stop_pkg_search
 	#lsb_release might not be installed...
 	if [ "$(which lsb_release)" ] ; then
@@ -321,7 +310,13 @@ debian_regs () {
 			;;
 		debbie)
 			#LMDE 4
+			#http://packages.linuxmint.com/index.php
 			deb_distro="buster"
+			;;
+		elsie)
+			#LMDE 5
+			#http://packages.linuxmint.com/index.php
+			deb_distro="bullseye"
 			;;
 		debian)
 			deb_distro="jessie"
@@ -414,12 +409,63 @@ debian_regs () {
 			#http://packages.linuxmint.com/index.php
 			deb_distro="bionic"
 			;;
+		ulyana)
+			#20
+			#http://packages.linuxmint.com/index.php
+			deb_distro="focal"
+			;;
+		ulyssa)
+			#20.1
+			#http://packages.linuxmint.com/index.php
+			deb_distro="focal"
+			;;
+		uma)
+			#20.2
+			#http://packages.linuxmint.com/index.php
+			deb_distro="focal"
+			;;
+		una)
+			#20.3
+			#http://packages.linuxmint.com/index.php
+			deb_distro="focal"
+			;;
+		vanessa)
+			#21
+			#http://packages.linuxmint.com/index.php
+			deb_distro="jammy"
+			;;
+		vera)
+			#21.1
+			#http://packages.linuxmint.com/index.php
+			deb_distro="jammy"
+			;;
+		esac
+
+		#Devuan: Compatibility Matrix
+		#https://en.wikipedia.org/wiki/Devuan
+		case "${deb_distro}" in
+		beowulf)
+			deb_distro="buster"
+			;;
+		chimaera)
+			deb_distro="bullseye"
+			;;
+		daedalus)
+			deb_distro="bookworm"
+			;;
+		excalibur)
+			deb_distro="trixie"
+			;;
 		esac
 
 		#Future Debian Code names:
 		case "${deb_distro}" in
-		bookworm)
-			#12 bookworm:
+		trixie)
+			#13 trixie: https://wiki.debian.org/DebianTrixie
+			deb_distro="sid"
+			;;
+		forky)
+			#14 forky: https://wiki.debian.org/DebianForky
 			deb_distro="sid"
 			;;
 		esac
@@ -427,45 +473,30 @@ debian_regs () {
 		#https://wiki.ubuntu.com/Releases
 		unset error_unknown_deb_distro
 		case "${deb_distro}" in
-		jessie|stretch|buster|bullseye|sid)
+		stretch|buster|bullseye|bookworm|sid)
 			#https://wiki.debian.org/LTS
-			#8 jessie: https://wiki.debian.org/DebianJessie
 			#9 stretch: https://wiki.debian.org/DebianStretch
 			#10 buster: https://wiki.debian.org/DebianBuster
 			#11 bullseye: https://wiki.debian.org/DebianBullseye
+			#12 bookworm: https://wiki.debian.org/DebianBookworm
 			unset warn_eol_distro
 			;;
-		squeeze|wheezy)
+		squeeze|wheezy|jessie)
 			#https://wiki.debian.org/LTS
 			#6 squeeze: 2016-02-29 https://wiki.debian.org/DebianSqueeze
 			#7 wheezy: 2018-05-31 https://wiki.debian.org/DebianWheezy
+			#8 jessie: 2020-06-30 https://wiki.debian.org/DebianJessie
 			warn_eol_distro=1
 			stop_pkg_search=1
 			;;
-		bionic|disco|eoan|focal)
+		bionic|focal|jammy|kinetic)
 			#18.04 bionic: (EOL: April 2023) lts: bionic -> focal
-			#19.04 disco: (EOL: July, 2020)
-			#19.10 eoan: (EOL: January, 2020)
-			#20.04 focal: (EOL: ) lts: focal -> xyz
+			#20.04 focal:  (EOL: April 2025) lts: focal -> jammy
+			#22.04 jammy:  (EOL: April 2027) lts: jammy -> xyz
+			#22.10 kinetic: (EOL: July 2023)
 			unset warn_eol_distro
 			;;
-		cosmic)
-			#18.10 cosmic: (EOL: July 18, 2019)
-			warn_eol_distro=1
-			stop_pkg_search=1
-			;;
-		yakkety|zesty|artful)
-			#16.10 yakkety: (EOL: July 20, 2017)
-			#17.04 zesty: (EOL: January 2018)
-			#17.10 artful: (EOL: July 2018)
-			warn_eol_distro=1
-			stop_pkg_search=1
-			;;
-		xenial)
-			#16.04 xenial: (EOL: April 2021) lts: xenial -> bionic
-			unset warn_eol_distro
-			;;
-		hardy|lucid|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily)
+		hardy|lucid|maverick|natty|oneiric|precise|quantal|raring|saucy|trusty|utopic|vivid|wily|xenial|yakkety|zesty|artful|cosmic|disco|eoan|groovy|hirsute|impish)
 			#8.04 hardy: (EOL: May 2013) lts: hardy -> lucid
 			#10.04 lucid: (EOL: April 2015) lts: lucid -> precise
 			#10.10 maverick: (EOL: April 10, 2012)
@@ -479,6 +510,16 @@ debian_regs () {
 			#14.10 utopic: (EOL: July 23, 2015)
 			#15.04 vivid: (EOL: February 4, 2016)
 			#15.10 wily: (EOL: July 28, 2016)
+			#16.04 xenial: (EOL: April 2021) lts: xenial -> bionic
+			#16.10 yakkety: (EOL: July 20, 2017)
+			#17.04 zesty: (EOL: January 2018)
+			#17.10 artful: (EOL: July 2018)
+			#18.10 cosmic: (EOL: July 18, 2019)
+			#19.04 disco: (EOL: January 23, 2020)
+			#19.10 eoan: (EOL: July 2020)
+			#20.10 groovy: (EOL: July 2021)
+			#21.04 hirsute: (EOL: January 2022)
+			#21.10 impish: (EOL: July 2022)
 			warn_eol_distro=1
 			stop_pkg_search=1
 			;;
@@ -507,30 +548,6 @@ debian_regs () {
 			pkg="libexpat1-dev:${deb_arch}"
 			check_dpkg
 		fi
-
-		#pkg: ia32-libs
-		if [ "x${deb_arch}" = "xamd64" ] ; then
-			unset dpkg_multiarch
-			if [ "x${ignore_32bit}" = "xfalse" ] ; then
-				pkg="libc6:i386"
-				check_dpkg
-				pkg="libncurses5:i386"
-				check_dpkg
-				pkg="libstdc++6:i386"
-				check_dpkg
-				pkg="zlib1g:i386"
-				check_dpkg
-				dpkg_multiarch=1
-			fi
-
-			if [ "${dpkg_multiarch}" ] ; then
-				unset check_foreign
-				check_foreign=$(LC_ALL=C dpkg --print-foreign-architectures)
-				if [ "x${check_foreign}" = "x" ] ; then
-					warn_dpkg_ia32=1
-				fi
-			fi
-		fi
 	fi
 
 	if [ "${warn_eol_distro}" ] ; then
@@ -547,7 +564,7 @@ debian_regs () {
 	if [ "${error_unknown_deb_distro}" ] ; then
 		echo "Unrecognized deb based system:"
 		echo "-----------------------------"
-		echo "Please cut, paste and email to: bugs@rcn-ee.com"
+		echo "Please cut, paste and email to: robertcnelson+bugs@gmail.com"
 		echo "-----------------------------"
 		echo "git: [$(${git_bin} rev-parse HEAD)]"
 		echo "git: [$(cat .git/config | grep url | sed 's/\t//g' | sed 's/ //g')]"
@@ -559,11 +576,8 @@ debian_regs () {
 	fi
 
 	if [ "${deb_pkgs}" ] ; then
-		echo "Debian/Ubuntu/Mint: missing dependencies, please install:"
+		echo "Debian/Ubuntu/Mint: missing dependencies, please install these packages via:"
 		echo "-----------------------------"
-		if [ "${warn_dpkg_ia32}" ] ; then
-			echo "sudo dpkg --add-architecture i386"
-		fi
 		echo "sudo apt-get update"
 		echo "sudo apt-get install ${deb_pkgs}"
 		echo "-----------------------------"
@@ -591,27 +605,6 @@ fi
 
 ARCH=$(uname -m)
 
-ignore_32bit="false"
-if [ "x${ARCH}" = "xx86_64" ] ; then
-	case "${toolchain}" in
-	gcc_linaro_eabi_5|gcc_linaro_gnueabihf_5|gcc_linaro_aarch64_gnu_5)
-		ignore_32bit="true"
-		;;
-	gcc_linaro_eabi_6|gcc_linaro_gnueabihf_6|gcc_linaro_aarch64_gnu_6)
-		ignore_32bit="true"
-		;;
-	gcc_linaro_eabi_7|gcc_linaro_gnueabihf_7|gcc_linaro_aarch64_gnu_7)
-		ignore_32bit="true"
-		;;
-	gcc_arm_eabi_8|gcc_arm_gnueabihf_8|gcc_arm_aarch64_gnu_8)
-		ignore_32bit="true"
-		;;
-	*)
-		ignore_32bit="false"
-		;;
-	esac
-fi
-
 git_bin=$(which git)
 
 git_major=$(LC_ALL=C ${git_bin} --version | awk '{print $3}' | cut -d. -f1)
@@ -619,11 +612,16 @@ git_minor=$(LC_ALL=C ${git_bin} --version | awk '{print $3}' | cut -d. -f2)
 git_sub=$(LC_ALL=C ${git_bin} --version | awk '{print $3}' | cut -d. -f3)
 
 #debian Stable:
-#https://packages.debian.org/stable/git -> 2.1.4
+#https://packages.debian.org/stretch/git -> 2.11.0
+#https://packages.debian.org/buster/git -> 2.20.1
+#https://packages.debian.org/bullseye/git -> 2.30.2
+#https://packages.ubuntu.com/bionic/git (18.04) -> 2.17.1
+#https://packages.ubuntu.com/focal/git (20.04) -> 2.25.1
+#https://packages.ubuntu.com/jammy/git (22.04) -> 2.34.1
 
 compare_major="2"
-compare_minor="1"
-compare_sub="4"
+compare_minor="20"
+compare_sub="1"
 
 unset build_git
 

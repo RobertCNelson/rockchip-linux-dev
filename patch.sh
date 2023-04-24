@@ -184,7 +184,7 @@ wireguard () {
 #external_git
 
 #rt
-wireguard
+#wireguard
 #local_patch
 
 pre_backports () {
